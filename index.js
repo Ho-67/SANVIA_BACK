@@ -49,12 +49,12 @@ app.use('/diceRolls', diceRollsRouter)
 app.use('/questions', questionRouter)
 
 // Add a basic route for the root path
-// app.get('/', (req, res) => {
-//   res.status(StatusCodes.OK).json({
-//     success: true,
-//     message: 'Server is alive!'
-//   })
-// })
+app.get('/', (req, res) => {
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: 'Server is alive!',
+  })
+})
 
 // 處理未定義的路由
 // /.*?/ 是匹配任何路徑
