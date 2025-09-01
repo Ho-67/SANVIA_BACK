@@ -28,6 +28,9 @@ mongoose
 
 // 創建一個新的 Express 應用（伺服器實例），可以用來設定路由、處理請求、設定中介軟體等
 const app = express()
+
+// 設定靜態文件服務
+app.use('/upload', express.static('upload'))
 // 讓所有的前端網域都可以來存取 API
 app.use(cors())
 

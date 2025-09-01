@@ -73,7 +73,7 @@ const schema = new Schema(
           enum: ['文字說明', '圖片說明', '影音說明'],
         },
         content: {
-          type: String, // 內容本身，可以是文字或圖片/影片 URL
+          type: [String], // 內容本身，可以是文字或一組圖片/影片 URL
         },
       },
     ],
@@ -85,7 +85,7 @@ const schema = new Schema(
           enum: ['文字說明', '圖片說明'],
         },
         content: {
-          type: String,
+          type: [String],
         },
       },
     ],

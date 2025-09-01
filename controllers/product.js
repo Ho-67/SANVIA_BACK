@@ -65,17 +65,24 @@ export const create = async (req, res) => {
     // 遍歷 features 和 specifications，將新上傳檔案的路徑填入
     const fillInFilePaths = (items) => {
       return items.map((item) => {
-        // 檢查前端傳來的標記，只處理有新檔案的項目
-        if (item.content === '__HAS_FILE__') {
-          const file = dynamicMediaFiles[fileIndex]
-          if (file) {
-            fileIndex++ // 使用一個檔案，索引就加一
-            return { ...item, content: file.path }
-          }
-          // 如果標記存在但檔案不存在，說明前後端資料不匹配，回傳錯誤
-          throw new Error('動態檔案數量與內容不匹配')
+        // content 預期為一個陣列
+        if (Array.isArray(item.content)) {
+          const newContent = item.content.map((contentValue) => {
+            // 如果是 placeholder，就從上傳的檔案中取一個路徑替換
+            if (contentValue === '__HAS_FILE__') {
+              const file = dynamicMediaFiles[fileIndex]
+              if (file) {
+                fileIndex++
+                return file.path
+              }
+              throw new Error('動態檔案數量與內容不匹配')
+            }
+            // 否則，保留原來的值 (文字內容或既有的 URL)
+            return contentValue
+          })
+          return { ...item, content: newContent }
         }
-        // 如果不是檔案標記，就返回原始項目（可能是文字或舊的 URL）
+        // 如果 content 不是陣列 (例外情況)，直接返回原項目
         return item
       })
     }
@@ -307,15 +314,24 @@ export const update = async (req, res) => {
     // 遍歷 features 和 specifications，將新上傳檔案的路徑填入
     const fillInFilePaths = (items) => {
       return items.map((item) => {
-        // 檢查前端傳來的標記，只處理有新檔案的項目
-        if (item.content === '__HAS_FILE__') {
-          const file = dynamicMediaFiles[fileIndex]
-          if (file) {
-            fileIndex++
-            return { ...item, content: file.path }
-          }
-          throw new Error('動態檔案數量與內容不匹配')
+        // content 預期為一個陣列
+        if (Array.isArray(item.content)) {
+          const newContent = item.content.map((contentValue) => {
+            // 如果是 placeholder，就從上傳的檔案中取一個路徑替換
+            if (contentValue === '__HAS_FILE__') {
+              const file = dynamicMediaFiles[fileIndex]
+              if (file) {
+                fileIndex++
+                return file.path
+              }
+              throw new Error('動態檔案數量與內容不匹配')
+            }
+            // 否則，保留原來的值 (文字內容或既有的 URL)
+            return contentValue
+          })
+          return { ...item, content: newContent }
         }
+        // 如果 content 不是陣列 (例外情況)，直接返回原項目
         return item
       })
     }
